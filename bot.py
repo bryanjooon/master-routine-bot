@@ -12,7 +12,12 @@ def send_telegram(text):
     payload = {
         "chat_id": CHAT_ID,
         "text": text,
-        "parse_mode": "Markdown"
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": [
+                [{"text": "🚀 Open Routine & PR Tracker", "web_app": {"url": MINI_APP_URL}}]
+            ]
+        }
     }
     res = requests.post(url, json=payload)
     print("Telegram Response:", res.json())
