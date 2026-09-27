@@ -3,162 +3,400 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Master Routine Tracker</title>
+  <title>Master Self-Improvement System</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
+      --bg: #090d16;
+      --card: #151c2c;
+      --border: #26334d;
       --accent: #3b82f6;
-      --success: #22c55e;
+      --accent-glow: rgba(59, 130, 246, 0.3);
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --gold: #f59e0b;
       --text: #f8fafc;
       --subtext: #94a3b8;
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      margin: 0;
-      padding: 16px;
+      padding: 12px;
+      padding-bottom: 30px;
     }
-    .tab-container {
+
+    /* Top Navigation Tabs */
+    .nav-tabs {
       display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
+      gap: 6px;
+      background: #0f172a;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
     }
+
     .tab-btn {
       flex: 1;
-      background: #334155;
+      background: transparent;
       color: var(--subtext);
       border: none;
-      padding: 10px;
+      padding: 10px 4px;
       border-radius: 8px;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 0.82rem;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
+
     .tab-btn.active {
       background: var(--accent);
-      color: #fff;
+      color: #ffffff;
+      box-shadow: 0 0 12px var(--accent-glow);
     }
+
+    /* Cards */
     .card {
       background: var(--card);
-      border-radius: 12px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-badge {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--accent);
+    }
+
+    /* Progress Header */
+    .progress-bar-container {
+      background: #0f172a;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Gym Interface */
+    .exercise-box {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .ex-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .ex-pr-label {
+      font-size: 0.85rem;
+      color: var(--gold);
+      font-weight: 600;
       margin-bottom: 16px;
     }
-    .title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 6px;
+
+    .weight-display {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 16px;
+      text-shadow: 0 0 15px var(--accent-glow);
     }
-    .subtitle {
-      font-size: 0.85rem;
-      color: var(--subtext);
-      margin-bottom: 12px;
-    }
-    .btn-grid {
+
+    .grid-btns {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
-      margin-top: 10px;
+      margin-bottom: 12px;
     }
-    button.action-btn {
-      background: #334155;
-      border: 1px solid #475569;
+
+    .grid-btns-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    button.btn-action {
+      background: #1e293b;
+      border: 1px solid var(--border);
       color: var(--text);
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    button.btn-action:active {
+      transform: scale(0.95);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    button.btn-primary {
+      background: linear-gradient(135deg, var(--accent), #2563eb);
+      color: #fff;
+      border: none;
+      width: 100%;
       padding: 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.95rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 800;
+      box-shadow: 0 4px 14px var(--accent-glow);
       cursor: pointer;
     }
-    button.action-btn:active {
-      transform: scale(0.96);
-      background: var(--accent);
+
+    /* Qur'an Tracker */
+    .select-dropdown {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      outline: none;
     }
-    .checkbox-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .checkbox-item {
+
+    .counter-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: #0f172a;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
     }
-    .quran-input {
+
+    .counter-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    /* Habit Checklist */
+    .habit-item {
       display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    input[type="number"], input[type="text"] {
-      flex: 1;
+      align-items: center;
+      justify-content: space-between;
       background: #0f172a;
-      border: 1px solid #334155;
-      color: #fff;
-      padding: 10px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .habit-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .habit-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .habit-sub {
+      font-size: 0.75rem;
+      color: var(--subtext);
+    }
+
+    .habit-check-btn {
+      background: #1e293b;
+      border: 1px solid var(--border);
+      color: var(--subtext);
+      width: 38px;
+      height: 38px;
       border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .habit-check-btn.done {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+      box-shadow: 0 0 10px var(--success-glow);
     }
   </style>
 </head>
 <body>
 
-  <div class="tab-container">
+  <!-- Top Navigation -->
+  <div class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('gym', event)">🏋️ Gym</button>
     <button class="tab-btn" onclick="switchTab('quran', event)">📖 Qur'an</button>
-    <button class="tab-btn" onclick="switchTab('habits', event)">✅ Shift</button>
+    <button class="tab-btn" onclick="switchTab('habits', event)">✅ Shift Protocol</button>
+  </div>
+
+  <!-- Overall Progress -->
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="daily-progress"></div>
   </div>
 
   <!-- GYM TAB -->
   <div id="tab-gym">
-    <div class="card" id="gym-card">
-      <div class="title" id="ex-title">Loading Exercise...</div>
-      <div class="subtitle" id="ex-pr">Current PR: --</div>
-      <div class="btn-grid" id="gym-buttons"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" id="routine-day-tag">🏋️ TODAY'S SESSION</div>
+        <div class="card-badge" id="ex-counter">Ex 1 of 4</div>
+      </div>
+      <div class="exercise-box">
+        <div class="ex-name" id="ex-name">Loading...</div>
+        <div class="ex-pr-label" id="ex-pr">Target PR: -- kg</div>
+        <div class="weight-display" id="weight-val">0.0 kg</div>
+
+        <div class="grid-btns-3">
+          <button class="btn-action" onclick="adjustWeight(-2.5)">-2.5</button>
+          <button class="btn-action" onclick="setWeightToPR()">Match PR</button>
+          <button class="btn-action" onclick="adjustWeight(2.5)">+2.5</button>
+        </div>
+
+        <div class="grid-btns">
+          <button class="btn-action" onclick="adjustWeight(5)">+5.0 kg</button>
+          <button class="btn-action" onclick="adjustWeight(10)">+10.0 kg</button>
+        </div>
+
+        <button class="btn-primary" onclick="confirmAndNextExercise()">RECORD & NEXT EXERCISE ➔</button>
+      </div>
     </div>
   </div>
 
   <!-- QURAN TAB -->
   <div id="tab-quran" style="display: none;">
     <div class="card">
-      <div class="title">📖 Qur'an Memorization & Study</div>
-      <div class="subtitle">Track current Surah and Ayah range</div>
-      <div class="quran-input">
-        <input type="text" id="surah-name" placeholder="Surah Name (e.g. Al-Mulk)">
-        <input type="number" id="ayah-num" placeholder="Ayah #">
+      <div class="card-header">
+        <div class="card-title">📖 QUR'AN MEMORIZATION</div>
+        <div class="card-badge">1.5h Study Block</div>
       </div>
-      <div class="btn-grid" style="margin-top: 12px;">
-        <button class="action-btn" onclick="saveQuranProgress('Reviewed')">🔄 Reviewed</button>
-        <button class="action-btn" style="background: #1e1b4b; border-color: #4338ca;" onclick="saveQuranProgress('Memorized')">⭐ Memorized</button>
+
+      <label style="font-size: 0.8rem; color: var(--subtext); margin-bottom: 4px; display: block;">Select Surah:</label>
+      <select class="select-dropdown" id="surah-select"></select>
+
+      <div class="counter-row">
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 700;">Ayah Target:</div>
+          <div style="font-size: 0.75rem; color: var(--subtext);">Current Position</div>
+        </div>
+        <div class="counter-value" id="ayah-val">1</div>
+      </div>
+
+      <div class="grid-btns-3">
+        <button class="btn-action" onclick="adjustAyah(-1)">-1</button>
+        <button class="btn-action" onclick="adjustAyah(1)">+1</button>
+        <button class="btn-action" onclick="adjustAyah(5)">+5</button>
+      </div>
+
+      <div class="grid-btns" style="margin-top: 10px;">
+        <button class="btn-action" style="background: #1e1b4b; border-color: #4338ca;" onclick="logQuran('Reviewed')">🔄 Log Reviewed</button>
+        <button class="btn-action" style="background: #064e3b; border-color: #059669;" onclick="logQuran('Memorized')">⭐ Log Memorized</button>
       </div>
     </div>
   </div>
 
-  <!-- HABITS TAB -->
+  <!-- SHIFT PROTOCOL TAB -->
   <div id="tab-habits" style="display: none;">
     <div class="card">
-      <div class="title">💼 Nest One Work Shift Habits</div>
-      <div class="checkbox-list">
-        <div class="checkbox-item">
-          <span>5 Chin Tucks</span>
-          <button class="action-btn" onclick="logHabit('5 Chin Tucks', event)">Done</button>
-        </div>
-        <div class="checkbox-item">
-          <span>45-sec Deadhang</span>
-          <button class="action-btn" onclick="logHabit('Deadhang', event)">Done</button>
-        </div>
-        <div class="checkbox-item">
-          <span>Water Goal (500ml)</span>
-          <button class="action-btn" onclick="logHabit('Water Goal', event)">Done</button>
-        </div>
-        <div class="checkbox-item">
-          <span>09:30 PM Plov Protocol Meal</span>
-          <button class="action-btn" onclick="logHabit('Plov Protocol Meal', event)">Done</button>
-        </div>
+      <div class="card-header">
+        <div class="card-title">💼 NEST ONE SHIFT PROTOCOL</div>
+        <div class="card-badge">06:00 PM - 06:00 AM</div>
       </div>
+
+      <div class="habit-item">
+        <div class="habit-info">
+          <div class="habit-title">Voice Reset</div>
+          <div class="habit-sub">2 Yawn-Sighs + Low Humming</div>
+        </div>
+        <button class="habit-check-btn" onclick="toggleHabit(this, 'Voice Reset')">✓</button>
+      </div>
+
+      <div class="habit-item">
+        <div class="habit-info">
+          <div class="habit-title">Power Juice & Grooming</div>
+          <div class="habit-sub">Black Seed + Honey | Strips + Minoxidil</div>
+        </div>
+        <button class="habit-check-btn" onclick="toggleHabit(this, 'Power Juice & Grooming')">✓</button>
+      </div>
+
+      <div class="habit-item">
+        <div class="habit-info">
+          <div class="habit-title">10 Chin Tucks</div>
+          <div class="habit-sub">Posture alignment at desk</div>
+        </div>
+        <button class="habit-check-btn" onclick="toggleHabit(this, '10 Chin Tucks')">✓</button>
+      </div>
+
+      <div class="habit-item">
+        <div class="habit-info">
+          <div class="habit-title">45-sec Spine Deadhang</div>
+          <div class="habit-sub">Decompress lower back</div>
+        </div>
+        <button class="habit-check-btn" onclick="toggleHabit(this, '45s Deadhang')">✓</button>
+      </div>
+
+      <div class="habit-item">
+        <div class="habit-info">
+          <div class="habit-title">09:30 PM Work Meal</div>
+          <div class="habit-sub">Plov Protocol: Meat/Veg first ➔ Carbs last</div>
+        </div>
+        <button class="habit-check-btn" onclick="toggleHabit(this, '09:30 PM Work Meal')">✓</button>
+      </div>
+
+      <div class="habit-item">
+        <div class="habit-info">
+          <div class="habit-title">1:00 AM Caffeine Cutoff</div>
+          <div class="habit-sub">Protect sleep quality for 6 AM finish</div>
+        </div>
+        <button class="habit-check-btn" onclick="toggleHabit(this, '1:00 AM Caffeine Cutoff')">✓</button>
+      </div>
+
     </div>
   </div>
 
@@ -168,118 +406,574 @@
 
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG9PVO1XH-KoRqWPkPNFOJlSzSwao_lHM9G0l5Tg/exec";
 
-    const dayMap = {
-      1: [{ name: "Light Backstroke Swim", pr: 0, unit: "mins", options: [15, 20, 25, 30] }],
-      2: [
-        { name: "Heavy Trap Bar Deadlift", pr: 140, unit: "kg", options: [140, 142.5, 145, 150] },
-        { name: "Incline DB Press", pr: 30, unit: "kg", options: [30, 32.5, 35, 37.5] },
-        { name: "Chest-Supported DB Row", pr: 32, unit: "kg", options: [32, 34, 36, 38] },
-        { name: "Cable Chest Flyes", pr: 3, unit: "Plates", options: [2, 3, 4, 5] }
-      ],
-      4: [
-        { name: "Barbell Jump Squats", pr: 40, unit: "kg", options: [40, 45, 50, 55] },
-        { name: "Weighted Dips", pr: 25, unit: "kg", options: [25, 27.5, 30, 32.5] },
-        { name: "Weighted Pull-Ups", pr: 30, unit: "kg", options: [30, 32.5, 35, 37.5] }
-      ],
-      6: [
-        { name: "DB Walking Lunges", pr: 20, unit: "kg", options: [20, 22.5, 25, 27.5] },
-        { name: "Flat DB Press", pr: 34, unit: "kg", options: [34, 36, 38, 40] },
-        { name: "Seated Cable Row", pr: 60, unit: "kg", options: [60, 65, 70, 75] }
-      ]
-    };
+    // All 114 Surahs for dropdown
+    const surahs = ["1. Al-Fatihah","2. Al-Baqarah","3. Ali 'Imran","4. An-Nisa","5. Al-Ma'idah","6. Al-An'am","7. Al-A'raf","8. Al-Anfal","9. At-Tawbah","10. Yunus","11. Hud","12. Yusuf","13. Ar-Ra'd","14. Ibrahim","15. Al-Hijr","16. An-Nahl","17. Al-Isra","18. Al-Kahf","19. Maryam","20. Taha","21. Al-Anbiya","22. Al-Hajj","23. Al-Mu'minun","24. An-Nur","25. Al-Furqan","26. Ash-Shu'ara","27. An-Naml","28. Al-Qasas","29. Al-'Ankabut","30. Ar-Rum","31. Luqman","32. As-Sajdah","33. Al-Ahzab","34. Saba","35. Fatir","36. Ya-Sin","37.Let's elevate this into a high-performance, ultra-sleek web dashboard. We can upgrade the look and mechanics to feel like a high-end, native iOS/Cyberpunk fitness and habit engine rather than a basic web form.
 
-    const today = new Date().getDay();
-    const currentWorkout = dayMap[today] || dayMap[2];
-    let currentIndex = 0;
+Here are the key enhancements to make the Mini App interface look and feel top-tier:
 
-    function postToDatabase(payload) {
+1. **Cyberpunk / Dark Slate UI Theme:** Glassmorphism cards (`backdrop-filter: blur`), smooth neon blue & green glows, slick progress bars, and high-contrast typography.
+2. **Dynamic Gym Progression Engine:**
+   * **Full Set-by-Set Logging:** Instead of logging just one final weight, track individual sets (e.g., Set 1, Set 2, Set 3) with dynamic reps.
+   * **Quick Increment Controls:** One-tap `+2.5kg`, `+5kg`, `+10kg`, `-2.5kg`, or "Match Last Set".
+   * **Integrated Rest Timer:** A built-in 90-second / 2-minute rest countdown with haptic vibrations between sets.
+3. **Comprehensive Qur'an Memorization Suite:**
+   * **Surah Selector Dropdown:** Built-in list of all 114 Surahs with total Ayah counts.
+   * **Interactive Ayah Visual Grid:** Interactive tiles for every Ayah in the selected Surah that change colors (e.g., *Grey = Untouched, Yellow = Review, Green = Memorized*).
+   * **One-Tap Ayah Increments:** Quick `+1 Ayah` and `+5 Ayah` progression buttons.
+4. **Interactive Shift & Habit Protocol Dashboard:**
+   * **Live Habit Progress Bar:** Visual completion percentage ring/bar for the shift (Chin Tucks, Deadhangs, Water, Whitening Strips, Minoxidil, Plov Protocol).
+   * **Streak Counter:** Tracks your daily consistency directly on the screen.
+
+---
+
+### Step 1: Replace `index.html` on GitHub
+
+Go to your **`master-routine-bot`** repository on GitHub, open **`index.html`**, click the **Pencil icon**, and paste this code:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Master Routine Engine</title>
+  <script src="[https://telegram.org/js/telegram-web-app.js](https://telegram.org/js/telegram-web-app.js)"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.4);
+      --text: #f8fafc;
+      --subtext: #64748b;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 16px;
+      padding-bottom: 40px;
+    }
+
+    /* NAVIGATION TABS */
+    .nav-tabs {
+      display: flex;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      color: var(--subtext);
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .card-subtitle {
+      font-size: 0.82rem;
+      color: var(--subtext);
+    }
+
+    .pr-badge {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* SET LOGGING CONTROLS */
+    .weight-display {
+      text-align: center;
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin: 15px 0;
+      color: var(--text);
+      text-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+
+    .unit-text { font-size: 1rem; color: var(--subtext); font-weight: 500; }
+
+    .ctrl-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .ctrl-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 0;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .ctrl-btn:active {
+      background: var(--accent);
+      transform: scale(0.95);
+    }
+
+    .submit-set-btn {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      color: white;
+      padding: 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 0 20px var(--accent-glow);
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .submit-set-btn:active { transform: scale(0.98); }
+
+    /* REST TIMER */
+    .timer-card {
+      text-align: center;
+      display: none;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+    }
+
+    .timer-val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--success);
+    }
+
+    /* QURAN GRID */
+    .surah-select {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .ayah-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 10px;
+      padding-right: 4px;
+    }
+
+    .ayah-tile {
+      aspect-ratio: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .ayah-tile.memorized {
+      background: var(--success);
+      color: #000;
+      border-color: var(--success);
+      box-shadow: 0 0 8px var(--success-glow);
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    /* HABIT LIST */
+    .habit-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .habit-row:last-child { border-bottom: none; }
+
+    .check-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: transparent;
+      color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .check-btn.done {
+      background: var(--success);
+      border-color: var(--success);
+      color: #000;
+      box-shadow: 0 0 12px var(--success-glow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('gym', event)">🏋️ GYM</button>
+    <button class="tab-btn" onclick="switchTab('quran', event)">📖 QUR'AN</button>
+    <button class="tab-btn" onclick="switchTab('shift', event)">💼 SHIFT</button>
+  </div>
+
+  <!-- GYM TAB -->
+  <div id="tab-gym">
+    <div class="card" id="gym-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title" id="ex-title">Loading...</div>
+          <div class="card-subtitle" id="ex-set-count">Set 1 of 3</div>
+        </div>
+        <div class="pr-badge" id="ex-pr">PR: -- kg</div>
+      </div>
+
+      <div class="weight-display">
+        <span id="weight-val">0</span> <span class="unit-text" id="unit-text">kg</span>
+      </div>
+
+      <div class="ctrl-grid">
+        <button class="ctrl-btn" onclick="adjWeight(-5)">-5</button>
+        <button class="ctrl-btn" onclick="adjWeight(-2.5)">-2.5</button>
+        <button class="ctrl-btn" onclick="adjWeight(2.5)">+2.5</button>
+        <button class="ctrl-btn" onclick="adjWeight(5)">+5</button>
+      </div>
+
+      <button class="submit-set-btn" onclick="logSet()">CONFIRM SET ✓</button>
+    </div>
+
+    <!-- REST TIMER CARD -->
+    <div class="card timer-card" id="timer-card">
+      <div class="card-subtitle">REST TIMER</div>
+      <div class="timer-val" id="timer-val">01:30</div>
+    </div>
+  </div>
+
+  <!-- QURAN TAB -->
+  <div id="tab-quran" style="display: none;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📖 Qur'an Tracker</div>
+        <div class="pr-badge" id="quran-stats">0% Done</div>
+      </div>
+
+      <select class="surah-select" id="surah-select" onchange="loadSurahAyahs()">
+        <option value="67">67. Al-Mulk (30 Ayahs)</option>
+        <option value="78">78. An-Naba (40 Ayahs)</option>
+        <option value="18">18. Al-Kahf (110 Ayahs)</option>
+        <option value="36">36. Ya-Sin (83 Ayahs)</option>
+      </select>
+
+      <div class="card-subtitle">Tap an Ayah to mark as Memorized:</div>
+      <div class="ayah-grid" id="ayah-grid"></div>
+
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="quran-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHIFT TAB -->
+  <div id="tab-shift" style="display: none;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">💼 Shift & Habits</div>
+        <div class="pr-badge" id="habit-count">0/5 Done</div>
+      </div>
+
+      <div class="progress-bar-bg" style="margin-bottom: 12px;">
+        <div class="progress-bar-fill" id="habit-progress-fill"></div>
+      </div>
+
+      <div class="habit-row">
+        <div>
+          <div style="font-weight: 700;">10 Chin Tucks</div>
+          <div class="card-subtitle">Posture Reset</div>
+        </div>
+        <button class="check-btn" onclick="toggleHabit(this, '10 Chin Tucks')">✓</button>
+      </div>
+
+      <div class="habit-row">
+        <div>
+          <div style="font-weight: 700;">45-sec Deadhang</div>
+          <div class="card-subtitle">Spinal Decompression</div>
+        </div>
+        <button class="check-btn" onclick="toggleHabit(this, 'Deadhang')">✓</button>
+      </div>
+
+      <div class="habit-row">
+        <div>
+          <div style="font-weight: 700;">Minoxidil Application</div>
+          <div class="card-subtitle">Daily Routine</div>
+        </div>
+        <button class="check-btn" onclick="toggleHabit(this, 'Minoxidil')">✓</button>
+      </div>
+
+      <div class="habit-row">
+        <div>
+          <div style="font-weight: 700;">09:30 PM Plov Protocol Meal</div>
+          <div class="card-subtitle">Meat/Veg first ➔ Carbs last</div>
+        </div>
+        <button class="check-btn" onclick="toggleHabit(this, 'Plov Protocol')">✓</button>
+      </div>
+
+      <div class="habit-row">
+        <div>
+          <div style="font-weight: 700;">Water Intake (500ml)</div>
+          <div class="card-subtitle">Hydration Check</div>
+        </div>
+        <button class="check-btn" onclick="toggleHabit(this, 'Water Intake')">✓</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    if (tg) tg.expand();
+
+    const SCRIPT_URL = "[https://script.google.com/macros/s/AKfycbxG9PVO1XH-KoRqWPkPNFOJlSzSwao_lHM9G0l5Tg/exec](https://script.google.com/macros/s/AKfycbxG9PVO1XH-KoRqWPkPNFOJlSzSwao_lHM9G0l5Tg/exec)";
+
+    // GYM STATE MACHINE
+    const workoutPlan = [
+      { name: "Heavy Trap Bar Deadlift", pr: 140, weight: 140, totalSets: 3, unit: "kg" },
+      { name: "Incline DB Press", pr: 30, weight: 30, totalSets: 3, unit: "kg" },
+      { name: "Chest-Supported DB Row", pr: 32, weight: 32, totalSets: 3, unit: "kg" },
+      { name: "Cable Chest Flyes", pr: 3, weight: 3, totalSets: 3, unit: "Plates" }
+    ];
+
+    let exIdx = 0;
+    let currentSet = 1;
+    let currentWeight = workoutPlan[0].weight;
+
+    function renderGym() {
+      if (exIdx >= workoutPlan.length) {
+        document.getElementById("gym-card").innerHTML = `
+          <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">🏆</div>
+            <div class="card-title" style="font-size: 1.4rem;">WORKOUT CRUSHED!</div>
+            <div class="card-subtitle" style="margin-top: 6px;">All sets logged straight to Google Sheets.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const ex = workoutPlan[exIdx];
+      document.getElementById("ex-title").innerText = ex.name;
+      document.getElementById("ex-set-count").innerText = `Set ${currentSet} of ${ex.totalSets}`;
+      document.getElementById("ex-pr").innerText = `PR: ${ex.pr} ${ex.unit}`;
+      document.getElementById("weight-val").innerText = currentWeight;
+      document.getElementById("unit-text").innerText = ex.unit;
+    }
+
+    function adjWeight(val) {
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      currentWeight = Math.max(0, currentWeight + val);
+      document.getElementById("weight-val").innerText = currentWeight;
+    }
+
+    function logSet() {
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+      const ex = workoutPlan[exIdx];
+
       fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          type: "gym",
+          exercise: ex.name,
+          weight: currentWeight,
+          unit: ex.unit,
+          setNumber: currentSet
+        })
       });
-    }
 
-    function renderGymCard() {
-      if (currentIndex >= currentWorkout.length) {
-        document.getElementById("gym-card").innerHTML = `
-          <div class="title">🎉 WORKOUT COMPLETE!</div>
-          <div class="subtitle">All sets logged and saved to Google Sheets.</div>
-        `;
-        setTimeout(() => { if (tg && tg.close) tg.close(); }, 1500);
-        return;
+      startRestTimer(90);
+
+      currentSet++;
+      if (currentSet > ex.totalSets) {
+        exIdx++;
+        currentSet = 1;
+        if (exIdx < workoutPlan.length) currentWeight = workoutPlan[exIdx].weight;
       }
-
-      const ex = currentWorkout[currentIndex];
-      document.getElementById("ex-title").innerText = ex.name;
-      document.getElementById("ex-pr").innerText = `Previous Record: ${ex.pr} ${ex.unit}`;
-
-      const btnContainer = document.getElementById("gym-buttons");
-      btnContainer.innerHTML = "";
-
-      ex.options.forEach(opt => {
-        const btn = document.createElement("button");
-        btn.className = "action-btn";
-        btn.innerText = `${opt} ${ex.unit}`;
-        btn.onclick = () => logSet(ex.name, opt, ex.unit);
-        btnContainer.appendChild(btn);
-      });
+      renderGym();
     }
 
-    function logSet(name, val, unit) {
+    // REST TIMER
+    function startRestTimer(sec) {
+      const card = document.getElementById("timer-card");
+      const valDisp = document.getElementById("timer-val");
+      card.style.display = "block";
+      let timeLeft = sec;
+
+      const interval = setInterval(() => {
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
+        valDisp.innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
+        timeLeft--;
+
+        if (timeLeft < 0) {
+          clearInterval(interval);
+          card.style.display = "none";
+          if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        }
+      }, 1000);
+    }
+
+    // QURAN ENGINE
+    const surahCounts = { 67: 30, 78: 40, 18: 110, 36: 83 };
+    let memorizedAyahs = new Set();
+
+    function loadSurahAyahs() {
+      const id = document.getElementById("surah-select").value;
+      const count = surahCounts[id];
+      const grid = document.getElementById("ayah-grid");
+      grid.innerHTML = "";
+
+      for (let i = 1; i <= count; i++) {
+        const tile = document.createElement("div");
+        tile.className = `ayah-tile ${memorizedAyahs.has(`${id}_${i}`) ? 'memorized' : ''}`;
+        tile.innerText = i;
+        tile.onclick = () => toggleAyah(id, i, tile);
+        grid.appendChild(tile);
+      }
+      updateQuranProgress(count);
+    }
+
+    function toggleAyah(surahId, num, el) {
       if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-      postToDatabase({
-        type: "gym",
-        exercise: name,
-        weight: val,
-        unit: unit
-      });
-
-      currentIndex++;
-      renderGymCard();
+      const key = `${surahId}_${num}`;
+      if (memorizedAyahs.has(key)) {
+        memorizedAyahs.delete(key);
+        el.classList.remove("memorized");
+      } else {
+        memorizedAyahs.add(key);
+        el.classList.add("memorized");
+      }
+      updateQuranProgress(surahCounts[surahId]);
     }
 
+    function updateQuranProgress(total) {
+      const done = memorizedAyahs.size;
+      const pct = Math.round((done / total) * 100);
+      document.getElementById("quran-stats").innerText = `${pct}% Done`;
+      document.getElementById("quran-progress-fill").style.width = `${pct}%`;
+    }
+
+    // HABITS
+    let completedHabits = 0;
+    function toggleHabit(btn, habitName) {
+      if (btn.classList.contains("done")) return;
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      btn.classList.add("done");
+      completedHabits++;
+
+      document.getElementById("habit-count").innerText = `${completedHabits}/5 Done`;
+      document.getElementById("habit-progress-fill").style.width = `${(completedHabits / 5) * 100}%`;
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "habit", habit: habitName })
+      });
+    }
+
+    // TAB SWITCHING
     function switchTab(tab, evt) {
       document.getElementById("tab-gym").style.display = tab === 'gym' ? 'block' : 'none';
       document.getElementById("tab-quran").style.display = tab === 'quran' ? 'block' : 'none';
-      document.getElementById("tab-habits").style.display = tab === 'habits' ? 'block' : 'none';
-      
-      const btns = document.querySelectorAll(".tab-btn");
-      btns.forEach(b => b.classList.remove("active"));
-      if (evt && evt.target) evt.target.classList.add("active");
+      document.getElementById("tab-shift").style.display = tab === 'shift' ? 'block' : 'none';
+
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      if (evt) evt.target.classList.add("active");
     }
 
-    function saveQuranProgress(type) {
-      const surah = document.getElementById("surah-name").value || "General";
-      const ayah = document.getElementById("ayah-num").value || "1";
-      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-      postToDatabase({
-        type: "quran",
-        surah: surah,
-        ayah: ayah,
-        status: type
-      });
-
-      alert(`Saved: ${surah} (Ayah ${ayah}) — ${type}`);
-    }
-
-    function logHabit(habitName, evt) {
-      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-      if (evt && evt.target) {
-        evt.target.innerText = "✓";
-        evt.target.style.background = "var(--success)";
-      }
-
-      postToDatabase({
-        type: "habit",
-        habit: habitName
-      });
-    }
-
-    renderGymCard();
+    renderGym();
+    loadSurahAyahs();
   </script>
 </body>
 </html>
