@@ -5,7 +5,7 @@ import requests
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 
-MINI_APP_URL = "https://github.com/bryanjooon/master-routine-bot/"
+MINI_APP_URL = "https://bryanjooon.github.io/master-routine-bot/"
 
 def send_telegram(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
