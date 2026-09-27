@@ -107,9 +107,9 @@
 <body>
 
   <div class="tab-container">
-    <button class="tab-btn active" onclick="switchTab('gym')">🏋️ Gym</button>
-    <button class="tab-btn" onclick="switchTab('quran')">📖 Qur'an</button>
-    <button class="tab-btn" onclick="switchTab('habits')">✅ Shift</button>
+    <button class="tab-btn active" onclick="switchTab('gym', event)">🏋️ Gym</button>
+    <button class="tab-btn" onclick="switchTab('quran', event)">📖 Qur'an</button>
+    <button class="tab-btn" onclick="switchTab('habits', event)">✅ Shift</button>
   </div>
 
   <!-- GYM TAB -->
@@ -144,19 +144,19 @@
       <div class="checkbox-list">
         <div class="checkbox-item">
           <span>5 Chin Tucks</span>
-          <button class="action-btn" onclick="logHabit('5 Chin Tucks')">Done</button>
+          <button class="action-btn" onclick="logHabit('5 Chin Tucks', event)">Done</button>
         </div>
         <div class="checkbox-item">
           <span>45-sec Deadhang</span>
-          <button class="action-btn" onclick="logHabit('Deadhang')">Done</button>
+          <button class="action-btn" onclick="logHabit('Deadhang', event)">Done</button>
         </div>
         <div class="checkbox-item">
           <span>Water Goal (500ml)</span>
-          <button class="action-btn" onclick="logHabit('Water Goal')">Done</button>
+          <button class="action-btn" onclick="logHabit('Water Goal', event)">Done</button>
         </div>
         <div class="checkbox-item">
           <span>09:30 PM Plov Protocol Meal</span>
-          <button class="action-btn" onclick="logHabit('Plov Protocol Meal')">Done</button>
+          <button class="action-btn" onclick="logHabit('Plov Protocol Meal', event)">Done</button>
         </div>
       </div>
     </div>
@@ -164,25 +164,24 @@
 
   <script>
     const tg = window.Telegram.WebApp;
-    tg.expand();
+    if (tg) tg.expand();
 
-    // Routine Workouts Sequence
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG9PVO1XH-KoRqWPkPNFOJlSzSwao_lHM9G0l5Tg/exec";
+
     const dayMap = {
-      1: [ // Monday
-        { name: "Light Backstroke Swim", pr: 0, unit: "mins", options: [15, 20, 25, 30] }
-      ],
-      2: [ // Tuesday
+      1: [{ name: "Light Backstroke Swim", pr: 0, unit: "mins", options: [15, 20, 25, 30] }],
+      2: [
         { name: "Heavy Trap Bar Deadlift", pr: 140, unit: "kg", options: [140, 142.5, 145, 150] },
         { name: "Incline DB Press", pr: 30, unit: "kg", options: [30, 32.5, 35, 37.5] },
         { name: "Chest-Supported DB Row", pr: 32, unit: "kg", options: [32, 34, 36, 38] },
         { name: "Cable Chest Flyes", pr: 3, unit: "Plates", options: [2, 3, 4, 5] }
       ],
-      4: [ // Thursday
+      4: [
         { name: "Barbell Jump Squats", pr: 40, unit: "kg", options: [40, 45, 50, 55] },
         { name: "Weighted Dips", pr: 25, unit: "kg", options: [25, 27.5, 30, 32.5] },
         { name: "Weighted Pull-Ups", pr: 30, unit: "kg", options: [30, 32.5, 35, 37.5] }
       ],
-      6: [ // Saturday
+      6: [
         { name: "DB Walking Lunges", pr: 20, unit: "kg", options: [20, 22.5, 25, 27.5] },
         { name: "Flat DB Press", pr: 34, unit: "kg", options: [34, 36, 38, 40] },
         { name: "Seated Cable Row", pr: 60, unit: "kg", options: [60, 65, 70, 75] }
@@ -193,13 +192,22 @@
     const currentWorkout = dayMap[today] || dayMap[2];
     let currentIndex = 0;
 
+    function postToDatabase(payload) {
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    }
+
     function renderGymCard() {
       if (currentIndex >= currentWorkout.length) {
         document.getElementById("gym-card").innerHTML = `
           <div class="title">🎉 WORKOUT COMPLETE!</div>
-          <div class="subtitle">All sets logged and saved. Get ready for post-workout meal & rest.</div>
+          <div class="subtitle">All sets logged and saved to Google Sheets.</div>
         `;
-        setTimeout(() => tg.close(), 1500);
+        setTimeout(() => { if (tg && tg.close) tg.close(); }, 1500);
         return;
       }
 
@@ -220,32 +228,55 @@
     }
 
     function logSet(name, val, unit) {
-      tg.HapticFeedback.impactOccurred('medium');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+      postToDatabase({
+        type: "gym",
+        exercise: name,
+        weight: val,
+        unit: unit
+      });
+
       currentIndex++;
       renderGymCard();
     }
 
-    function switchTab(tab) {
+    function switchTab(tab, evt) {
       document.getElementById("tab-gym").style.display = tab === 'gym' ? 'block' : 'none';
       document.getElementById("tab-quran").style.display = tab === 'quran' ? 'block' : 'none';
       document.getElementById("tab-habits").style.display = tab === 'habits' ? 'block' : 'none';
       
       const btns = document.querySelectorAll(".tab-btn");
       btns.forEach(b => b.classList.remove("active"));
-      event.target.classList.add("active");
+      if (evt && evt.target) evt.target.classList.add("active");
     }
 
     function saveQuranProgress(type) {
       const surah = document.getElementById("surah-name").value || "General";
       const ayah = document.getElementById("ayah-num").value || "1";
-      tg.HapticFeedback.notificationOccurred('success');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      postToDatabase({
+        type: "quran",
+        surah: surah,
+        ayah: ayah,
+        status: type
+      });
+
       alert(`Saved: ${surah} (Ayah ${ayah}) — ${type}`);
     }
 
-    function logHabit(habitName) {
-      tg.HapticFeedback.impactOccurred('light');
-      event.target.innerText = "✓";
-      event.target.style.background = "var(--success)";
+    function logHabit(habitName, evt) {
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      if (evt && evt.target) {
+        evt.target.innerText = "✓";
+        evt.target.style.background = "var(--success)";
+      }
+
+      postToDatabase({
+        type: "habit",
+        habit: habitName
+      });
     }
 
     renderGymCard();
